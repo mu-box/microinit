@@ -1,7 +1,7 @@
 # Contributor: Dan Hunsaker <danhunsaker@gmail.com>
 # Maintainer: Dan Hunsaker <danhunsaker@gmail.com>
 pkgname=nanoinit
-pkgver=0.0.1
+pkgver=0.0.3
 pkgrel=0
 pkgdesc="A small, proper, init process for docker containers."
 url="https://github.com/mu-box/nanoinit"

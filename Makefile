@@ -11,4 +11,4 @@ nanoinit: nanoinit.c nanoinit.h
 deb: nanoinit
 	install -d deb/bin
 	install -s nanoinit deb/bin/nanoinit
-	fakeroot dpkg-deb --build deb nanoinit_0.0.1_amd64.deb
+	fakeroot dpkg-deb --build deb nanoinit_0.0.3_amd64.deb
