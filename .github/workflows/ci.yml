@@ -3,7 +3,7 @@ on:
   - push
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,6 +31,13 @@ jobs:
       - run: mv nanoinit{,-${{ matrix.arch }}}
       - run: mv /alpine/tmp/nanoinit/${{ matrix.arch }}/nanoinit-*.apk nanoinit-${{ matrix.arch }}.apk
       - run: /alpine/destroy --remove
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nanoinit-${{ matrix.arch }}
+          path: |
+            nanoinit-${{ matrix.arch }}
+            nanoinit-${{ matrix.arch }}.apk
+          retention-days: 5
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
