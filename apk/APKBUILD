@@ -1,0 +1,34 @@
+# Contributor: Dan Hunsaker <danhunsaker@gmail.com>
+# Maintainer: Dan Hunsaker <danhunsaker@gmail.com>
+pkgname=nanoinit
+pkgver=0.0.1
+pkgrel=0
+pkgdesc="A small, proper, init process for docker containers."
+url="https://github.com/mu-box/nanoinit"
+arch="all"
+license="MPL-2.0"
+depends=""
+makedepends=""
+checkdepends=""
+install=""
+subpackages=""
+source=""
+builddir=""
+
+build() {
+	make -C ../ nanoinit
+}
+
+check() {
+	# Replace with proper check command(s)
+	:
+}
+
+package() {
+	install -D ../nanoinit "$pkgdir"/sbin/nanoinit
+    install -d "$pkgdir"/etc/nanoinit.d
+    install -d "$pkgdir"/etc/rc.local
+    install -d "$pkgdir"/etc/container_environment
+    touch "$pkgdir"/etc/container_environment.sh
+}
+

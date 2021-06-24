@@ -1,0 +1,40 @@
+name: CI
+on:
+  - push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - x86
+          - x86_64
+          - armhf
+          - armv7
+          - aarch64
+          - ppc64le
+          - s390x
+          - mips64
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.0/alpine-chroot-install \
+              && echo '444069f1a060b9f08b7e5ac264c8b9527b32fb54  alpine-chroot-install' | sha1sum -c \
+              || exit 1
+      - run: sudo ./alpine-chroot-install -a ${{ matrix.arch }} -i $(pwd)
+      - run: /alpine/enter-chroot apk add abuild
+      - run: /alpine/enter-chroot addgroup ${USER} abuild
+      - run: /alpine/enter-chroot -u ${USER} abuild-keygen -an
+      - run: cd apk ; /alpine/enter-chroot -u ${USER} abuild -c -P /tmp/ ; cd ..
+      - run: mv nanoinit{,-${{ matrix.arch }}}
+      - run: mv /alpine/tmp/nanoinit/${{ matrix.arch }}/nanoinit-*.apk nanoinit-${{ matrix.arch }}.apk
+      - run: /alpine/destroy --remove
+      - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            nanoinit-${{ matrix.arch }}
+            nanoinit-${{ matrix.arch }}.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

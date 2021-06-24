@@ -261,7 +261,7 @@ run_init(char *args[])
 {
 	debug("starting service manager");
 	pid_t	init_pid;
-	char	*default_args[] = {"/opt/gonano/sbin/runsvdir", "-P",
+	char	*default_args[] = {"/sbin/runsvdir", "-P",
 		"/etc/service", 0};
 	if (args == NULL)
 		args = default_args;
