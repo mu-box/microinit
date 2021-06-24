@@ -38,17 +38,11 @@ jobs:
             nanoinit-${{ matrix.arch }}
             nanoinit-${{ matrix.arch }}.apk
           retention-days: 5
-      - if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          . $GITHUB_ENV
-          mv nanoinit{,-${TAG}}-${{ matrix.arch }}
-          mv nanoinit{,-${TAG}}-${{ matrix.arch }}.apk
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            nanoinit-${{ env.TAG }}-${{ matrix.arch }}
-            nanoinit-${{ env.TAG }}-${{ matrix.arch }}.apk
+            nanoinit-${{ matrix.arch }}
+            nanoinit-${{ matrix.arch }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
