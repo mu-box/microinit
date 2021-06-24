@@ -22,6 +22,7 @@ jobs:
           wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.0/alpine-chroot-install \
               && echo '444069f1a060b9f08b7e5ac264c8b9527b32fb54  alpine-chroot-install' | sha1sum -c \
               || exit 1
+      - run: chmod +x alpine-chroot-install
       - run: sudo ./alpine-chroot-install -a ${{ matrix.arch }} -i $(pwd)
       - run: /alpine/enter-chroot apk add abuild
       - run: /alpine/enter-chroot addgroup ${USER} abuild
