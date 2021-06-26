@@ -26,23 +26,25 @@ jobs:
       - run: sudo ./alpine-chroot-install -a ${{ matrix.arch }} -i $(pwd)
       - run: /alpine/enter-chroot apk add abuild
       - run: /alpine/enter-chroot addgroup ${USER} abuild
-      - run: /alpine/enter-chroot -u ${USER} abuild-keygen -an
-      - run: cd apk ; /alpine/enter-chroot -u ${USER} abuild -c -P /tmp/ ; cd ..
+      - run: |
+          echo "${{ secrets.ABUILD_ARCHIVE }}" | \
+          base64 -d | \
+          /alpine/enter-chroot -u ${USER} tar xzv -C ~/
+      - run: |
+          cd apk
+          /alpine/enter-chroot -u ${USER} abuild -c -P /tmp/
+          cd ..
       - run: mv nanoinit{,-${{ matrix.arch }}}
       - run: mv /alpine/tmp/nanoinit/${{ matrix.arch }}/nanoinit-*.apk nanoinit-${{ matrix.arch }}.apk
       - run: /alpine/destroy --remove
       - uses: actions/upload-artifact@v2
         with:
-          name: nanoinit-${{ matrix.arch }}
-          path: |
-            nanoinit-${{ matrix.arch }}
-            nanoinit-${{ matrix.arch }}.apk
+          name: nanoinit-${{ matrix.arch }}.apk
+          path: nanoinit-${{ matrix.arch }}.apk
           retention-days: 5
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            nanoinit-${{ matrix.arch }}
-            nanoinit-${{ matrix.arch }}.apk
+          files: nanoinit-${{ matrix.arch }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
