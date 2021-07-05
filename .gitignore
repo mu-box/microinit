@@ -2,3 +2,4 @@ alpine-chroot-install
 nanoinit
 apk/*
 !apk/APKBUILD
+!apk/nanoinit.*
