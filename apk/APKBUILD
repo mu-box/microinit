@@ -35,5 +35,5 @@ package() {
         cd "$pkgdir"/etc
         ln -s container_environment.sh profile.d/
     )
-	install -m 4755 -D ../nanoinit "$pkgdir"/sbin/nanoinit
+	install -m 0755 -D ../nanoinit "$pkgdir"/sbin/nanoinit
 }
