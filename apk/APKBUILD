@@ -2,7 +2,7 @@
 # Maintainer: Dan Hunsaker <danhunsaker@gmail.com>
 pkgname=nanoinit
 pkgver=0.0.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A small, proper, init process for docker containers."
 url="https://github.com/mu-box/nanoinit"
 arch="all"
@@ -19,16 +19,16 @@ build() {
 	make -C ../ nanoinit
 }
 
-check() {
-	# Replace with proper check command(s)
-	:
-}
-
 package() {
+    echo "#!/bin/bash" > /tmp/rclocal
+    install -m 0755 -D /tmp/rclocal "$pkgdir"/etc/rc.local
+    install -m 0755 -d "$pkgdir"/etc/nanoinit.d
+    install -m 0700 -d "$pkgdir"/etc/container_environment
+    install -m 0640 -g 8377 -D /dev/null "$pkgdir"/etc/container_environment.sh
+    install -m 0755 -d "$pkgdir"/etc/profile.d
+    (
+        cd "$pkgdir"/etc
+        ln -s container_environment.sh profile.d/
+    )
 	install -m 0755 -D ../nanoinit "$pkgdir"/sbin/nanoinit
-    install -d "$pkgdir"/etc/nanoinit.d
-    install -d "$pkgdir"/etc/container_environment
-    install -m 0755 -D /dev/null "$pkgdir"/etc/rc.local
-    install -m 0755 -D /dev/null "$pkgdir"/etc/container_environment.sh
 }
-
