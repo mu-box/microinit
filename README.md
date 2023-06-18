@@ -1,30 +1,30 @@
-[![nanoinit logo](http://nano-assets.gopagoda.io/readme-headers/nanoinit.png)](http://nanobox.io/open-source#nanoinit)
- [![Build Status](https://travis-ci.org/nanopack/nanoinit.svg)](https://travis-ci.org/nanopack/nanoinit)
+[![microinit logo](http://microbox.rocks/assets/readme-headers/microinit.png)](http://microbox.cloud/open-source#microinit)
+ [![Build Status](https://github.com/micropack/microinit/actions/workflows/ci.yaml/badge.svg)](https://github.com/micropack/microinit/actions)
 
-# Nanoinit
+# Microinit
 
 A small, proper, init process for docker containers.
 
-## Why nanoinit?
+## Why microinit?
 
 Docker containers don't usually run with a true init process, and often times suffer from having un-reaped processes sitting around.
 There are other init processes that can take care of this.
 One of which is my_init which is written in Python.
 It works well, but the only issue is that it uses the Python runtime which uses a little more ram than we would like.
-Writing the nanoinit in C helps reduce the memory footprint, allowing more docker containers to run on a system.
+Writing the microinit in C helps reduce the memory footprint, allowing more docker containers to run on a system.
 
 ## Usage:
-    nanoinit [options...] [init command to run]
+    microinit [options...] [init command to run]
         Options:
         --quiet                 Set log level to warning
         --no-killall            Skip killall on shutdown
-        --skip-startup-files    Skip /etc/rc.local and /etc/nanoinit.d/* files
+        --skip-startup-files    Skip /etc/rc.local and /etc/microinit.d/* files
 
 If no command is specified, it defaults to:
-    /opt/gonano/sbin/runsvdir -P /etc/service
+    /opt/gomicro/sbin/runsvdir -P /etc/service
 
-Before running the init command, nanoinit will run:
-* /etc/nanoinit.d/*
+Before running the init command, microinit will run:
+* /etc/microinit.d/*
 * /etc/rc.local
 
 ## TODO
@@ -32,10 +32,10 @@ Before running the init command, nanoinit will run:
 
 ### Contributing
 
-Contributions to the nanoinit project are welcome and encouraged. Nanoinit is a [Nanobox](https://nanobox.io) project and contributions should follow the [Nanobox Contribution Process & Guidelines](https://docs.nanobox.io/contributing/).
+Contributions to the microinit project are welcome and encouraged. Microinit is a [Microbox](https://microbox.cloud) project and contributions should follow the [Microbox Contribution Process & Guidelines](https://docs.microbox.cloud/contributing/).
 
 ### Licence
 
-Mozilla Public License Version 2.0
+This project is released under [The MIT License](http://opensource.org/licenses/MIT).
 
-[![open source](http://nano-assets.gopagoda.io/open-src/nanobox-open-src.png)](http://nanobox.io/open-source)
+[![open source](http://microbox.rocks/assets/open-src/microbox-open-src.png)](http://microbox.cloud/open-source)

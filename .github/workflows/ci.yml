@@ -4,8 +4,10 @@ on:
 
 jobs:
   build:
+    name: build ${{ matrix.arch }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         arch:
           - x86
@@ -15,12 +17,11 @@ jobs:
           - aarch64
           - ppc64le
           - s390x
-          - mips64
     steps:
       - uses: actions/checkout@v2
       - run: |
-          wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.0/alpine-chroot-install \
-              && echo '444069f1a060b9f08b7e5ac264c8b9527b32fb54  alpine-chroot-install' | sha1sum -c \
+          wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.2/alpine-chroot-install \
+              && echo '60c7e0b5d82e21d1a549fc9a46ba3b36688c09dc  alpine-chroot-install' | sha1sum -c \
               || exit 1
       - run: chmod +x alpine-chroot-install
       - run: sudo ./alpine-chroot-install -a ${{ matrix.arch }} -i $(pwd)
@@ -34,17 +35,17 @@ jobs:
           cd apk
           /alpine/enter-chroot -u ${USER} abuild -c -P /tmp/
           cd ..
-      - run: mv nanoinit{,-${{ matrix.arch }}}
-      - run: mv /alpine/tmp/nanoinit/${{ matrix.arch }}/nanoinit-*.apk nanoinit-${{ matrix.arch }}.apk
+      - run: mv microinit{,-${{ matrix.arch }}}
+      - run: mv /alpine/tmp/microinit/${{ matrix.arch }}/microinit-*.apk microinit-${{ matrix.arch }}.apk
       - run: /alpine/destroy --remove
       - uses: actions/upload-artifact@v2
         with:
-          name: nanoinit-${{ matrix.arch }}.apk
-          path: nanoinit-${{ matrix.arch }}.apk
+          name: microinit-${{ matrix.arch }}.apk
+          path: microinit-${{ matrix.arch }}.apk
           retention-days: 5
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: nanoinit-${{ matrix.arch }}.apk
+          files: microinit-${{ matrix.arch }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

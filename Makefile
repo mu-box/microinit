@@ -3,12 +3,12 @@
 
 .PHONY: all deb
 
-all:	nanoinit
+all:	microinit
 
-nanoinit: nanoinit.c nanoinit.h
-	gcc -std=gnu11 -o nanoinit nanoinit.c
+microinit: microinit.c microinit.h
+	gcc -std=gnu11 -o microinit microinit.c
 
-deb: nanoinit
+deb: microinit
 	install -d deb/bin
-	install -s nanoinit deb/bin/nanoinit
-	fakeroot dpkg-deb --build deb nanoinit_0.0.3_amd64.deb
+	install -s microinit deb/bin/microinit
+	fakeroot dpkg-deb --build deb microinit_0.0.3_amd64.deb

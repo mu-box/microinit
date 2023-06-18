@@ -1,15 +1,6 @@
 // -*- mode: c; tab-width: 4; indent-tabs-mode: 1; st-rulers: [80] -*-
 // vim: ts=8 sw=8 ft=c noet
 
-/*
- * Copyright (c) 2015 Pagoda Box Inc.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
- */
- 
-
 #include <signal.h>
 #include <stdio.h>
 #include <errno.h>
@@ -22,7 +13,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <stdarg.h>
-#include "nanoinit.h"
+#include "microinit.h"
 
 extern char **environ;
 
@@ -53,7 +44,7 @@ LOG(info,  LOG_LEVEL_INFO,  "Info");
 LOG(debug, LOG_LEVEL_DEBUG, "Debug");
 
 void
-import_envvars(int clear_existing_environment, 
+import_envvars(int clear_existing_environment,
 	int override_existing_environment)
 {
 	debug("import_envvars(%d, %d)", clear_existing_environment,
@@ -189,11 +180,11 @@ export_envvars(int to_dir)
 					char filename[FILENAME_MAX];
 					sprintf(filename, "/etc/container_environment/%s", key);
 					FILE *file;
-					if ((file = fopen(filename, "w")) != NULL) {  
+					if ((file = fopen(filename, "w")) != NULL) {
 						fprintf(file, "%s", value);
 						fclose(file);
 					} else {
-						error("Failed to open file %s: %s", filename, 
+						error("Failed to open file %s: %s", filename,
 							strerror(errno));
 					}
 				}
@@ -288,8 +279,8 @@ run_rc_local()
 	char		*rc_local[] = {"/etc/rc.local", 0};
 	pid_t		pid;
 	int         status;
-	if (stat(rc_local[0], &s) == 0 && 
-		(S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) && 
+	if (stat(rc_local[0], &s) == 0 &&
+		(S_ISREG(s.st_mode) || S_ISLNK(s.st_mode)) &&
 		(s.st_mode | S_IXUSR)) {
 		if ((pid = fork()) == 0) {
 			import_envvars(1, 1);
@@ -315,14 +306,14 @@ run_rc_local()
 }
 
 void
-run_nanoinit_d(char *action)
+run_microinit_d(char *action)
 {
 	struct stat		s;
 	struct dirent	**name_list;
 	pid_t			pid;
 	int				status;
 	int				n;
-	char    	    init_dir[] = "/etc/nanoinit.d/";
+	char    	    init_dir[] = "/etc/microinit.d/";
 	if (stat(init_dir, &s) == 0 && S_ISDIR(s.st_mode)) {
 		if ((n = scandir(init_dir, &name_list, 0, alphasort)) >= 0) {
 			for (int i = 0; i < n; i++) {
@@ -361,11 +352,11 @@ run_nanoinit_d(char *action)
 				free(name_list[i]);
 			}
 		} else {
-			error("/etc/nanoinit.d: %s", strerror(errno));
+			error("/etc/microinit.d: %s", strerror(errno));
 		}
 		free(name_list);
 	} else {
-		debug("/etc/nanoinit.d: %s", strerror(errno));
+		debug("/etc/microinit.d: %s", strerror(errno));
 	}
 }
 
@@ -373,7 +364,7 @@ int
 main(int argc, char *argv[])
 {
 	log_level = LOG_LEVEL_DEBUG;
-	info("                         _       _ _ ");  
+	info("                         _       _ _ ");
 	info(" _ __   __ _ _ __   ___ (_)_ __ (_) |_ ");
 	info("| '_ \\ / _` | '_ \\ / _ \\| | '_ \\| | __|");
 	info("| | | | (_| | | | | (_) | | | | | | |_ ");
@@ -415,7 +406,7 @@ main(int argc, char *argv[])
 	export_envvars(1);
 
 	if (skip_startup_files == 0) {
-		run_nanoinit_d("start");
+		run_microinit_d("start");
 		run_rc_local();
 	}
 
@@ -430,7 +421,7 @@ main(int argc, char *argv[])
 	if (signaled)
 		warn("Init system aborted.");
 	if (skip_startup_files == 0)
-		run_nanoinit_d("stop");
+		run_microinit_d("stop");
 	if (killall)
 		kill_all_processes(KILL_ALL_PROCESSES_TIMEOUT);
 	return ret;

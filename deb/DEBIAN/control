@@ -1,10 +1,10 @@
-Package: nanoinit
+Package: microinit
 Version: 0.0.3
 Section: admin
 Priority: optional
 Architecture: amd64
 Installed-Size: 19
-Maintainer: Pagoda Box <braxton@pagodabox.com>
-Description: Nanoinit
+Maintainer: Nanobox <braxton@pagodabox.com>
+Description: Microinit
  A small, proper, init process for docker containers.
-Homepage: https://github.com/nanopack/nanoinit
+Homepage: https://github.com/micropack/microinit
